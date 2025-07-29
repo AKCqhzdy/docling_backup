@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Optional, Type
 
-import numpy
+import numpy as np
 from docling_core.types.doc import BoundingBox, CoordOrigin
 from docling_core.types.doc.page import BoundingRectangle, TextCell
 
@@ -27,6 +27,7 @@ import base64
 from io import BytesIO
 from PIL import Image
 import re
+from paddleocr import LayoutDetection
 
 _log = logging.getLogger(__name__)
 
@@ -50,6 +51,7 @@ class MyOcrModel(BaseOcrModel):
         self.options: MyOcrOptions
 
         self.scale = 3  # multiplier for 72 dpi == 216 dpi.
+        self.layout_model = LayoutDetection(model_name="PP-DocLayout_plus-L")
 
         if self.enabled:
             try:
@@ -143,6 +145,10 @@ class MyOcrModel(BaseOcrModel):
             else:
                 with TimeRecorder(conv_res, "ocr"):
                     ocr_rects = self.get_ocr_rects(page)
+                    print(ocr_rects)
+                    ocr_rects = self.get_ocr_rects2(page)
+                    print(ocr_rects)
+                    exit(0)
 
                     all_ocr_cells = []
                     for ocr_rect in ocr_rects:
@@ -226,3 +232,25 @@ class MyOcrModel(BaseOcrModel):
     @classmethod
     def get_options_type(cls) -> Type[OcrOptions]:
         return MyOcrOptions
+
+
+    def get_ocr_rects2(self, page: Page) -> List[BoundingBox]: # use paddleocr to detect text boxes
+        assert page.size is not None
+        img_np = np.array(page.get_image())
+        results = self.layout_model.predict(img_np, batch_size=1, layout_nms=True)
+
+        ocr_boxes = []
+        for res in results:
+            for box in res['boxes']:
+                xmin, ymin, xmax, ymax = map(float, box['coordinate'])
+                ocr_boxes.append(
+                    BoundingBox(
+                        l=xmin,
+                        t=ymin,
+                        r=xmax,
+                        b=ymax,
+                        coord_origin=CoordOrigin.TOPLEFT
+                    )
+                )
+
+        return ocr_boxes

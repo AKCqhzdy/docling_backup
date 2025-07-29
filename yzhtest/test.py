@@ -9,8 +9,6 @@ from docling.document_converter import DocumentConverter, PdfFormatOption
 import json
 
 def main():
-    input_doc_path = "/usr/local/lib/python3.11/dist-packages/docling/yzhtest/datas/sample-tables.pdf"
-
     pipeline_options = PdfPipelineOptions()
 
     op = 0
@@ -37,11 +35,12 @@ def main():
         }
     )
 
+    prefix = "/usr/local/lib/python3.11/dist-packages/docling/yzhtest"
+    input_doc_path = f"{prefix}/datas/test.pdf"
     doc = converter.convert(input_doc_path).document
     md = doc.export_to_markdown()
-    prefix = "/usr/local/lib/python3.11/dist-packages/docling/yzhtest/output/"
     suffix = "_table"
-    output_file_path = f"{prefix}{file_name}{suffix}.md"
+    output_file_path = f"{prefix}/output/{file_name}{suffix}.md"
     with open(output_file_path, "w", encoding="utf-8") as f:
         f.write(md)
     output_file_path_json = f"{prefix}{file_name}{suffix}.json"

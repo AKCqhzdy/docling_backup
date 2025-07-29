@@ -1,371 +1,61 @@
-| Column header (TH)   | Column header (TH)   | Column header (TH)   |
-|----------------------|----------------------|----------------------|
-| Data cell (TD)       | Data cell (TD)       | Row header (TH)      |
-| Data cell (TD)       | Data cell (TD)       | Row header(TH)       |
+one-quarter of all users and a high portion of Bitcoin transactions are associated with illegal activities [26].
 
-| Expenditure by function £ million   | Expenditure by function £ million   |   2009/10 |   2010/11 1 |
-|-------------------------------------|-------------------------------------|-----------|-------------|
-| Policy functions                    | Financial                           |     22.5  |       30.57 |
-| Policy functions                    | Information 2                       |     10.2  |       14.8  |
-| Policy functions                    | Contingency                         |      2.6  |        1.2  |
-| Remunerated functions               | Agency services 3                   |     44.7  |       35.91 |
-| Remunerated functions               | Payments                            |     22.41 |       19.88 |
-| Remunerated functions               | Banking                             |     22.9  |       44.23 |
-| Remunerated functions               | Other                               |     12.69 |       10.32 |
+Such activity may be expressed as active accounts of high degrees participating in high-volume transactions.
 
-|
-| Sidekick 1     | Rupert Grint     |
-| Sidekick 2     | Emma Watson      |
-| Lovable ogre   | Robbie Coltrane  |
-| Professor      | Maggie Smith     |
-| Headmaster     | Richard Harris   |
+C. Existing Anomaly Detection Methods and Related Work
 
-| Role             | Actor          |
-|------------------|----------------|
-| Daniel Radcliffe | Main character |
-| Rupert Grint     | Sidekick 1     |
-| Emma Watson      | Sidekick 2     |
-| Robbie Coltrane  | Lovable ogre   |
-| Maggie Smith     | Professor      |
-| Richard Harris   | Headmaster     |
+Traditional Detection Methods. Some recent surveys focused on security data collection and analysis in different networks [27], [28]. Several related research projects have suggested solutions to detect suspicious accounts: The authors of [6] tried to identify bot activity by inspecting the distribution of time differences between consecutive transactions of Ethereum wallets. In another work, [29] the authors tried to detect smart Ponzi schemes by examining transactions and account features such as textual data that is attached to transactions, account interactions, and transaction frequencies. Statistical study of blockchain transaction flows was undertaken in [7] and [30] to answer interesting questions about the typical behavior of users.
 
-|                             | 2010   | 2009   | 2008   |
-|-----------------------------|--------|--------|--------|
-| Non-current assets          |        |        |        |
-| Property                    | 345    | 445    | 222    |
-| Investment                  | 567    | 654    | 423    |
-| Intangibles                 | 423    | 123    | 453    |
-| Current assets              |        |        |        |
-| Trade and other receivables | 435    | 634    | 231    |
-| Cash and cash equivalents   | 524    | 123    | 482    |
-| Other                       | 223    | 211    | 254    |
+Machine Learning Detection Methods. A considerable amount of the research work that has been done in the field of anomaly detection in blockchain relied on Machine Learning methods to extract the structural features of the blockchain network graph. The blockchain can be represented as a weighted graph describing transactions between accounts [31], [32], [33]. From the graph, features can be extracted using different ML methods such as Graph Convolutional Network (GCN) and autoencoder technology or by using a One-Class SVM in order to detect anomalies. The authors of [34] also applied K-means clustering to detect spam Bitcoin transactions for DoS attacks. The authors of [35] used XGBoost classifier to detect illicit accounts based on their transaction history.
 
-| Rainfall (inches)   | Americas   |   Asia |   Europe |   Africa |
-|---------------------|------------|--------|----------|----------|
-| 2010                | 2010       |   2010 |     2010 |     2010 |
-| Average             | 104        |    201 |      193 |      144 |
-| 24 hour high        | 15         |     26 |       27 |       18 |
-| 12 hour high        | 9          |     10 |       11 |       12 |
-| 2009                | 2009       |   2009 |     2009 |     2009 |
-| Average 133         |            |    244 |      155 |      166 |
-| 24 hour high        | 27         |     28 |       29 |       20 |
-| 12 hour high        | 11         |     12 |       13 |       16 |
+These approaches may yield good results but their point of weakness relies on the fact that in order to identify suspicious activity, one must iterate over all the blocks in the chain and collect all the transactions for further computation.
 
---|
-| **2010**          |          |      |        |        |
-| Average           | 104      | 201  | 193    | 144    |
-| 24 hour high      | 15       | 26   | 27     | 18     |
-| 12 hour high      | 9        | 10   | 11     | 12     |
-| **2009**          |          |      |        |        |
-| Average           | 133      | 244  | 155    | 166    |
-| 24 hour high      | 27       | 28   | 29     | 20     |
-| 12 hour high      | 11       | 12   | 13     | 16     |
+Frequency Estimation with Sketches. Processing large sequential data streams such as blockchain blocks, network packets or sensors data can be very resource-consuming and time inefficient. Thus, sketching techniques have become widely adopted for various network monitoring and management tasks, including estimating flow size [36], identifying heavy hitters [37], detecting heavy changers [38] and so on. The authors of [39] suggested the usage of two sketches: HyperLogLog [18] and Sample &amp; Hold [19], [40] in order to detect and mitigate Random Subdomain DDoS attacks [41]. The authors of [42] described a method for summarizing large-volume network traffic while allowing reversibility to find anomalous keys. Other notable methods have been proposed to estimate statistics such as cardinality over large volume traffic using sampling algorithms [43], [44], [45] and sketches [46], [47], [48].
 
-| Non-current assets   |   2010 |   2009 |   2008 |
-|----------------------|--------|--------|--------|
-| Property             |    345 |    445 |    222 |
-| Investment           |    567 |    654 |    423 |
-| Intangibles          |    423 |    123 |    453 |
+In contrast to this paper, none of the mentioned studies attempts to implement frequency estimation on blockchain networks. There are some key characteristics of blockchain networks distinguishing them from computer networks which frequency estimation solutions must consider [49]: First, the granularity of transmitted data elements in blockchain are blocks of transactions; whereas in computer networks, packets, which are equivalent to individual transactions in Blockchain, are sent individually. Second, in computer networks, packets are routed from one node to another, while in blockchain, due to it being decentralized, blocks are broadcasted. Lastly, unlike in computer networks, blockchain nodes are anonymous.
 
-| Current assets   |   2010 |   2009 | 2008                            |
-|------------------|--------|--------|---------------------------------|
-|                  |    435 |    634 | Trade and other receivables 231 |
-| Cash and cash    |    524 |    123 | equivalents 482                 |
-| Other            |    223 |    211 | 254                             |
+Usage of Sketches in Blockchain. The current design of blockchain networks such as Bitcoin and Ethereum makes use of sketches such as Bloom Filter and Merkle Tree to answer membership queries and encode blocks data [2], [3]. Some acclaimed methods proposed using sketches for other purposes as well: [9] surveys potential future applications of sketches in blockchains; [10] suggested using Bloom Filter for account addresses representation in the interest of Bitcoin light clients; and [11] proposed using Invertible Bloom Lookup Table for synchronizing pools of transactions. In contrast to this paper, none of the mentioned studies attempts to use sketches for the purpose of anomaly detection in blockchain networks which is challenging in light of the key characteristics of blockchain mentioned previously.
 
-| Rainfall (inches)   |   Americas |   Asia |   Europe |   Africa |
-|---------------------|------------|--------|----------|----------|
-| Average             |        133 |    244 |      155 |      166 |
-| 24 hour high        |         27 |     28 |       29 |       20 |
-| 12 hour high        |         11 |     12 |       13 |       16 |
+III. MODEL AND PROBLEM DEFINITION
 
---|
-| Average           | 133      | 244  | 155    | 166    |
-| 24 hour high      | 27       | 28   | 29     | 20     |
-| 12 hour high      | 11       | 12   | 13     | 16     |
+In this article, we focus on the detection of suspicious accounts and suspicious network anomalies. We list particular account and network behaviors that are expressed through characteristics of the transactions. We use $I(\cdot)$ to denote the indicator function.
 
-|                        | 2011      | 2011    | 2010 restated   | 2010 restated   |
-|------------------------|-----------|---------|-----------------|-----------------|
-| General income         |           | 250,000 |                 | 200,000         |
-| Increase in value, WIP |           | 15,000  |                 | 30,000          |
-|                        |           | 265,000 |                 | 230,000         |
-| Administrative costs   |           |         |                 |                 |
-| Staff costs            | (200,000) |         | (150,000)       |                 |
-| Early departures       | (10,000)  |         | (20,000)        |                 |
-| Other                  | (25,000)  |         | (10,000)        |                 |
-| Depreciation           | (10,000)  |         | (10,000)        |                 |
-| Programme costs        |           |         |                 |                 |
-| Impairment loss        | (10,000)  |         | (5,000)         |                 |
-| Other                  | (5,000)   |         | (5,000)         |                 |
-|                        | (260,000) |         | (200,000)       |                 |
-| Surplus                |           | 5,000   |                 | 30,000          |
+The first three problems refer to specific activities of suspicious accounts we aim to identify with high accuracy.
 
-|                      |                       | 2011      | 2010 restated   |
-|----------------------|-----------------------|-----------|-----------------|
-| Income               | General income        | 250,000   | 200,000         |
-|                      | Increase in value     | 15,000    | 30,000          |
-|                      | Total income          | 265,000   | 230,000         |
-| Administrative costs | Staff costs           | (200,000) | (150,000)       |
-|                      | Early departures      | (10,000)  | (20,000)        |
-|                      | Other operating costs | (25,000)  | (10,000)        |
-|                      | Depreciation          | (10,000)  | (10,000)        |
-| Programme costs      | Impairment loss       | (10,000)  | (5,000)         |
-|                      | Other                 | (5,000)   | (5,000)         |
-|                      | Total costs           | (260,000) | (200,000)       |
-| Surplus              | Surplus               | 5,000     | 30,000          |
+Problem 1 (Problem 1: Account Transaction Values): Within a time period, consider the aggregated sum of transaction values in which an account is involved (either as a sender or a receiver). We say that the account is suspicious if this value refers to a major part of the total transactions value at that time. Formally, with some anomaly factor $F \in [0, 1]$, an account $A$ with an aggregated value $TxsValueA$ is said to be suspicious if the total transactions value over all accounts $TxsValueTotal$, satisfies
 
-|
-| **Surplus**          | 5,000    | 30,000        |
+$$I(TxsValueA \geq F \cdot TxsValueTotal)$$  \hspace{1cm} (1)
 
-|      | 2008                                                           | 2008                                                           | 2009                                                        | 2009                                                        |
-|------|----------------------------------------------------------------|----------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------|
-| Name | Yes                                                            | No                                                             | Yes                                                         | No                                                          |
-| Bob  | 2                                                              | 5                                                              | 6                                                           | 7                                                           |
-| Sue  | 3                                                              | 8                                                              | 4                                                           | 7                                                           |
-| Sam  | [data relating to both columns in a single cell spanning both] | [data relating to both columns in a single cell spanning both] | [data relating to both columns a single cell spanning both] | [data relating to both columns a single cell spanning both] |
+Problem 2 (Problem 2: Account Transaction Frequency): Within a time period, consider the number of transactions in which an account is involved (either as a sender or a receiver). We say that the account is suspicious if this value refers to a major part of the total number of transactions at that time. Formally, with some anomaly factor $F \in [0, 1]$, an account $A$ with a transaction count $TxsCountA$ is said to be suspicious if the total transactions count over all accounts $TxsCountTotal$, satisfies
 
-| Question                       | Respondent A   | Respondent B   | Respondent C                  |
-|--------------------------------|----------------|----------------|-------------------------------|
-|                               |                |               | Are you a UK citizen?        |
-|                               |                |               | Are you currently employed?  |
-| Do you have a driving licence? |               |               |                              |
+$$I(TxsCountA \geq F \cdot TxsCountTotal)$$  \hspace{1cm} (2)
 
-| Question                       | Respondent A   | Respondent B   | Respondent C                    |
-|--------------------------------|----------------|----------------|---------------------------------|
-| No                             |                | Yes            | Are you a UK citizen? No        |
-| Yes                            | No             |                | Are you currently employed? Yes |
-| Do you have a driving licence? | No             | No             | Yes                             |
+Problem 3 (Problem 3: Account Node Degree): Within a time period, consider the node degree of an account namely the number of distinct accounts the account interacts with. We say that the account is suspicious if this value is larger than a specified threshold $\theta\_{deg}$.
 
-|                         | 2006   | 2007   | 2008   | 2009   |
-|-------------------------|--------|--------|--------|--------|
-| Economics               | A, B   | A, C   | A, B   | A, C   |
-| International relations | A, E   | A, E   | A, B   | A, E   |
-| Philosophy              | A      | A      | A      | A, D   |
-| Politics                | A, D   | A, D   | A, D   | A      |
-| Mathematics             | B, C   | B      | A, E   | A, B   |
-| English                 | A, C   | A, B   | A,B    | C      |
+Formally, with some anomaly degree threshold $\theta\_{\text{deg}}$, an account $A$ with a node degree $\text{Degree}\_A$ is said to be suspicious within a time period if it satisfies
 
-|
-| Economics                     | A, B | A, C | A, B | A, C |
-| International relations       | A, E | A, E | A, B | A, E |
-| Philosophy                    | A    | A    | A    | A, D |
-| Politics                      | A, D | A, D | A, D | A    |
-| Mathematics                   | B, C | B    | A, E | A, B |
-| English                       | A, C | A, B | A, B | C    |
+$$I(\text{Degree}\_A \geq \theta\_{\text{deg}})$$ (3)
 
-|                         | 2006   | 2007   | 2008   | 2009   |
-|-------------------------|--------|--------|--------|--------|
-| Economics               | No     | Yes    | Yes    | Yes    |
-| International relations | No     | No     | No     | No     |
-| Philosophy              | No     | No     | No     | No     |
-| Politics                | No     | No     | No     | No     |
-| Mathematics             | Yes    | No     | No     | No     |
-| English                 | Yes    | Yes    | Yes    | Yes    |
+**Problem 4 (Problem 4: Variety of Estimation Tasks):** We aim to detect various traffic anomalies (e.g., identifying heavy hitters, increase detection, entropy estimation etc.) by relying on a single block summary. The motivation for this challenge is that sometimes, the particular phenomena that we aim to detect, might not be known as early as the time of computing the block summaries. Also, we are restricted in size and cannot create a dedicated summary to each potential solution. Hence, we seek to find a multi-task sketch-based solution that offers both generality (i.e., supports many applications) but at the same time provides fair accuracy comparable to custom solutions (e.g., solutions to Problems 1-3). Such sketch can detect attacks with multiple features, eliminating the need for separate sketches. For example, it can identify DDoS attacks based on changes in both HHs and network transaction entropy, using a single data structure for a more efficient detection process. In addition, a generic sketch enables addressing questions that may arise at a later time after its creation, without requiring prior knowledge of those questions during the sketch’s initial creation.
 
-| Accounting item      | Accounting item        | 2011    |
-|----------------------|------------------------|---------|
-| Income               | General income         | 200,000 |
-|                      | Increase in value, WIP | 30,000  |
-|                      | Income subtotal        | 230,000 |
-| Administrative costs | Staff                  | 150,000 |
-|                      | Early departures       | 20,000  |
-|                      | Other operating costs  | 10,000  |
-|                      | Depreciation           | 10,000  |
-| Programme costs      | Impairment loss        | 10,000  |
-|                      | Costs subtotal         | 200,000 |
-| Balance              | Balance                | 30,000  |
+**Detecting Threats Using Our Methods.** As outlined in Section II.B, threats to the blockchain can be distinguished by certain defining characteristics. Table I illustrates how the problems mentioned above can aid in reducing the risks posed by various threats on the blockchain. Traditionally, in order to measure the statistics described in the table we would have to iterate over the entire blockchain history block by block and read a large number of blocks transactions. This approach is highly unscalable and extremely time and resources consuming.
 
-| Accounting item      | Accounting item        | 2011      |
-|----------------------|------------------------|-----------|
-| Income               | General income         | 200,000   |
-|                      | Increase in value, WIP | 30,000    |
-|                      | Income subtotal        | 230,000   |
-| Administrative costs | Staff                  | (150,000) |
-|                      | Early departures       | (20,000)  |
-|                      | Other operating costs  | (10,000)  |
-|                      | Depreciation           | (10,000)  |
-| Programme costs      | Impairment loss        | (10,000)  |
-|                      | Costs subtotal         | (200,000) |
-| Balance              | Balance                | 30,000    |
+To allow scalability, we offer a two-stage workflow. In the **online stage**, a sketch is added to the header of each block. The sketches can be computed either by a miner and be part of the block proposal examined in the consensus protocol or alternatively computed by each node independently upon the arrival of the block. Creating a sketch is a relatively simple and quick task compared to the blocks arrival time. In the **offline stage**, sketches of blocks recorded in the blockchain can be processed to detect anomalies efficiently, even upon considering a large number of blocks. This stage can also be referred to as the detection stage.
 
--|
-| **Income**                       |          |
-| General income                   | 200,000  |
-| Increase in value, WIP           | 30,000   |
-| Income subtotal                  | **230,000** |
-| **Administrative costs**         |          |
-| Staff                            | (150,000)|
-| Early departures                 | (20,000) |
-| Other operating costs            | (10,000) |
-| Depreciation                     | (10,000) |
-| **Programme costs**              |          |
-| Impairment loss                  | (10,000) |
-| Costs subtotal                   | **(200,000)** |
-| **Balance**                      | **30,000** |
+### IV. METHODS FOR SIGNIFICANT ACTIVITY DETECTION
 
-| Country     | 1980   | 1990   |   2000 |   2010 |
-|-------------|--------|--------|--------|--------|
-| Afghanistan | 0.78   | 1.48   |   2.16 |   3.33 |
-| Albania     | 8.89   | 9.67   |   9.89 |  10.38 |
-| Algeria     | 4.74   | 3.33   |   5.5  |   7.24 |
-| Andorra     | 4.98   | 5.63   |   9.09 |  10.35 |
-| Angola      | -      | -      |   4.42 |   4.42 |
+#### A. Goals, Accuracy Metrics and High-Level Approach
 
-| Expenditure by function £million   | Expenditure by function £million   |   2009/10 |   2010/11 1 |
-|------------------------------------|------------------------------------|-----------|-------------|
-| Policy functions                   | Financial                          |     22.5  |       30.57 |
-| Policy functions                   | Information 2                      |     10.2  |       14.8  |
-| Policy functions                   | Contingency                        |      2.6  |        1.2  |
-| Remunerated functions              | Agency services 3                  |     44.7  |       35.91 |
-| Remunerated functions              | Payments                           |     22.41 |       19.88 |
-| Remunerated functions              | Banking                            |     22.9  |       44.23 |
-| Remunerated functions              | Other                              |     12.69 |       10.32 |
+**Goals.** For Problems 1-3 our goal is to find accounts with a relatively significant aggregated transactions value/frequency or with an absolute significant node degree within a period of time. Our objective for Problem 4 is to introduce a universal framework that can facilitate the resolution of various inquiries.
 
-|
-| Policy functions                 |         |         |
-| Financial                        | 22.5    | 30.57   |
-| Information                      | 10.2    | 14.8    |
-| Contingency                      | 2.6     | 1.2     |
-| Remunerated functions            |         |         |
-| Agency services                  | 44.7    | 35.91   |
-| Payments                         | 22.41   | 19.88   |
-| Banking                          | 22.90   | 44.23   |
-| Other                            | 12.69   | 10.32   |
+**Accuracy Metrics.** Our methods classify accounts as suspicious or non-suspicious based on the sketches. To measure the accuracy of the methods we compare these classifications to those computed based on the complete blocks data. Each classification can be observed as one of four categories: true positive, false positive, true negative or false negative. For instance, false positives refer to accounts classified as suspicious by the sketches and not by the complete data. From these we calculate the metrics Precision = $\frac{TP}{TP+FP}$ and the Recall = $\frac{TP}{TP+FN}$. We also look at the metric $F\_1$-score = $2 \cdot \frac{\text{Recall} \cdot \text{Precision}}{\text{Recall} + \text{Precision}}$ that considers both Precision and Recall. The purpose of this evaluation method is to increase the chances of sketch-based classification being as effective as full-data based classification in detecting anomalies and real-world attacks.
 
-(1) Provisional total as of publication date.
-(2) Costs associated with on-going information programmes.
-(3) From the management accounts, net of recoveries and including interest charges.
+**High-level Approach.** Intuitively, for Problems 1-2 our solution stores the top-K accounts with the highest values of transactions or number of transactions in each block. For Problem 3 our approach maintains a HLL data structure that approximates the number of unique neighbors of each account out of the top-K accounts with the highest degree in the block. Finally, for Problem 4 our proposal is to store a generic application-agnostic pyramid sketch for each $N$ blocks window that will be processed offline for a variety of counting tasks.
 
-| Expenditure by function £million   | Expenditure by function £million   |   2009/10 |   2010/11 |
-|------------------------------------|------------------------------------|-----------|-----------|
-| Policy functions                   | Financial                          |     22.5  |     30.57 |
-| Policy functions                   | Information                        |     10.2  |     14.8  |
-| Policy functions                   | Contingency                        |      2.6  |      1.2  |
-| Remunerated functions              | Agency services                    |     44.7  |     35.91 |
-| Remunerated functions              | Payments                           |     22.41 |     19.88 |
-| Remunerated functions              | Banking                            |     22.9  |     44.23 |
-| Remunerated functions              | Other                              |     12.69 |     10.32 |
+UTXO (Unspent Transaction Output) and account-based are two different transaction models used in blockchain technology to represent ownership and transfer of value between participants [50]. The main difference between the two models is that in the UTXO model, used by Bitcoin [51], every transaction must refer to previous transactions by using their unspent outputs as inputs to the new transaction. Once a sender is confirmed to have adequate unspent funds, they can submit the transaction and receive the unspent transaction output, which represents the remaining balance. In contrast, the account-based model, used by Ethereum [52], maintains account balances for each participant, similar to a traditional bank account, and represents transactions as debits and credits to these accounts. Our proposed methods are model-agnostic, focusing solely on transaction characteristics such as values, frequencies and degrees, and can be applied to both models.
 
-| Expenditure £m   | Notes                       | 2010   | 2011   |
-|------------------|-----------------------------|--------|--------|
-|                  | (Notes located on page [n]) |        |        |
-| Information      | 1                           | 10.2   | 14.8   |
-| Contingency      |                             | 2.6    | 1.2    |
-| Payments         | 3                           | 22.41  | 19.88  |
-| Banking services | 4                           | 22.90  | 44.23  |
-| Interest         |                             | 0.23   | 0.10   |
-| Dividends        | 23                          | 2.5    | 3.68   |
-| Other            | 9                           | 12.69  | 10.32  |
+#### B. Solution to Problems 1-2: Account Transaction Values and Frequencies
 
-|      | 2008    | 2008      | 2009    | 2009      |
-|------|---------|-----------|---------|-----------|
-| Name | Entered | Completed | Entered | Completed |
-| Bob  | 22      | 21        | 20      | 19        |
-| Sue  | 44      | 12        | 12      | 10        |
+In order to detect accounts with a significant total transactions value or frequency over a period of time we can use a **Heavy Hitters** sketch.
 
---|
-| Bob  | 22      | 21        | 20      | 19        |
-| Sue  | 44      | 12        | 12      | 10        |
-
-|                     | 2010   | 2009   | 2008   |
-|---------------------|--------|--------|--------|
-| Non-current assets  |        |        |        |
-| Buildings           | 345    | 445    | 222    |
-| Investment          | 567    | 654    | 423    |
-| Intangibles         | 423    | 123    | 453    |
-| Current assets      |        |        |        |
-| Trade               | 435    | 634    | 231    |
-| Cash                | 524    | 123    | 482    |
-| Other               | 223    | 211    | 254    |
-| Current liabilities |        |        |        |
-| Trade liabilities   | 154    | 125    | 421    |
-| Financial debt      | 231    | 474    | 572    |
-| Provisions          | 111    | 312    | 347    |
-
-|      | 2008    | 2008   | 2009    | 2009   |
-|------|---------|--------|---------|--------|
-| Name | Entered | Won    | Entered | Won    |
-| Bob  | 22      | 21     | 20      | 19     |
-| Sue  | 44      | 12     | 12      | 10     |
-| Sam  | 16      | 4      | 45      | 30     |
-
-|                         | 2006   | 2007   | 2008   | 2009   |
-|-------------------------|--------|--------|--------|--------|
-| Economics               | A, B   | A, C   | A, C   | A, C   |
-| International relations | A, E   | A, E   | A, B   | A, B   |
-| Philosophy              | A      | A      | A      | A      |
-| Politics                | A, D   | A, D   | A, B   | A      |
-| Mathematics             | B, C   | B      | A, B   | A, B   |
-| English                 | A, C   | A, B   | A,B    | A, C   |
-
-|
-| Economics                     | A, B | A, C | A, C | A, C |
-| International relations       | A, E | A, E | A, B | A, B |
-| Philosophy                    | A    | A    | A    | A    |
-| Politics                      | A, D | A, D | A, B | A    |
-| Mathematics                   | B, C | B    | A, B | A, B |
-| English                       | A, C | A, B | A, B | A, C |
-
-|   Name |   Apples | Pears                                |
-|--------|----------|--------------------------------------|
-|     20 |       25 | Bob Scott                            |
-|     24 |       15 | Susan. P. Arnold-Jones, BA, FRSA, MD |
-|     14 |       10 | Sam Holder-Dickinson                 |
-
-|                     | 2010   | 2009   | 2008   |
-|---------------------|--------|--------|--------|
-| Non-current assets  |        |        |        |
-| Buildings           | 345    | 445    | 222    |
-| Investment          | 567    | 654    | 423    |
-| Intangibles         | 423    | 123    | 453    |
-| Current assets      |        |        |        |
-| Trade               | 435    | 634    | 231    |
-| Cash                | 524    | 123    | 482    |
-| Other               | 223    | 211    | 254    |
-| Current liabilities |        |        |        |
-| Trade liabilities   | 154    | 125    | 421    |
-| Financial debt      | 231    | 474    | 572    |
-| Provisions          | 111    | 312    | 347    |
-
-|
-| **Non-current assets**         |      |      |      |
-| Buildings                      | 345  | 445  | 222  |
-| Investment                     | 567  | 654  | 423  |
-| Intangibles                    | 423  | 123  | 453  |
-| **Current assets**             |      |      |      |
-| Trade                          | 435  | 634  | 231  |
-| Cash                           | 524  | 123  | 482  |
-| Other                          | 223  | 211  | 254  |
-| **Current liabilities**        |      |      |      |
-| Trade liabilities              | 154  | 125  | 421  |
-| Financial debt                 | 231  | 474  | 572  |
-| Provisions                     | 111  | 312  | 347  |
-
-|                     |   South America |   Asia |   Africa |   Australia |
-|---------------------|-----------------|--------|----------|-------------|
-| 2010                |          2010   | 2010   |   2010   |      2010   |
-| Highest average     |           523.6 |  467.4 |    405   |       340.5 |
-| Highest in 24 hours |            73.1 |   54.1 |     27.2 |        66.3 |
-| Highest in 12 hours |            42.4 |   30.1 |     15.9 |        40.3 |
-| 2009                |          2009   | 2009   |   2009   |      2009   |
-| Highest average     |           487.7 |  453.6 |    398.7 |       356   |
-| Highest in 24 hours |            67.2 |   53.2 |     44.3 |        53.8 |
-| Highest in 12 hours |            34.7 |   34.1 |     29.8 |        31   |
-| 2008                |          2008   | 2008   |   2008   |      2008   |
-| Highest average     |           496.7 |  444.3 |    502.1 |       399.6 |
-| Highest in 24 hours |            44.2 |   56.7 |     32.1 |        63.2 |
-| Highest in 12 hours |            30.1 |   32.7 |     21.9 |        40.2 |
-
---|
-| **2010**         |               |        |        |           |
-| Highest average  | 523.6         | 467.4  | 405.0  | 340.5     |
-| Highest in 24 hours | 73.1       | 54.1   | 27.2   | 66.3      |
-| Highest in 12 hours | 42.4       | 30.1   | 15.9   | 40.3      |
-| **2009**         |               |        |        |           |
-| Highest average  | 487.7         | 453.6  | 398.7  | 356       |
-| Highest in 24 hours | 67.2       | 53.2   | 44.3   | 53.8      |
-| Highest in 12 hours | 34.7       | 34.1   | 29.8   | 31.0      |
-| **2008**         |               |        |        |           |
-| Highest average  | 496.7         | 444.3  | 502.1  | 399.6     |
-| Highest in 24 hours | 44.2       | 56.7   | 32.1   | 63.2      |
-| Highest in 12 hours | 30.1       | 32.7   | 21.9   | 40.2      |
+For Problem 1 the sketch includes account addresses of the top-K accounts with the highest aggregated block transactions.
