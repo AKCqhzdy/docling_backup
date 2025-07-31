@@ -11,7 +11,7 @@ import json
 def main():
     pipeline_options = PdfPipelineOptions()
 
-    op = 0
+    op = 1
     if op == 0:
         ocr_options = MyOcrOptions(force_full_page_ocr=True)
         file_name = "test"
@@ -35,7 +35,7 @@ def main():
         }
     )
 
-    prefix = "/usr/local/lib/python3.11/dist-packages/docling/yzhtest"
+    prefix = "/usr/local/lib/python3.10/dist-packages/docling/yzhtest"
     input_doc_path = f"{prefix}/datas/test.pdf"
     doc = converter.convert(input_doc_path).document
     md = doc.export_to_markdown()
@@ -43,7 +43,7 @@ def main():
     output_file_path = f"{prefix}/output/{file_name}{suffix}.md"
     with open(output_file_path, "w", encoding="utf-8") as f:
         f.write(md)
-    output_file_path_json = f"{prefix}{file_name}{suffix}.json"
+    output_file_path_json = f"{prefix}/output/{file_name}{suffix}.json"
     with open(output_file_path_json, "w", encoding="utf-8") as f:
         f.write(json.dumps(doc.export_to_dict()))
 
