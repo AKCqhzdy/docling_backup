@@ -11,7 +11,7 @@ import json
 def main():
     pipeline_options = PdfPipelineOptions()
 
-    op = 1
+    op = 0
     if op == 0:
         ocr_options = MyOcrOptions(force_full_page_ocr=True)
         file_name = "test"

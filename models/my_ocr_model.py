@@ -145,10 +145,10 @@ class MyOcrModel(BaseOcrModel):
             else:
                 with TimeRecorder(conv_res, "ocr"):
                     ocr_rects = self.get_ocr_rects(page)
-                    print(ocr_rects)
-                    ocr_rects = self.get_ocr_rects2(page)
-                    print(ocr_rects)
-                    exit(0)
+                    # print(ocr_rects)
+                    # ocr_rects = self.get_ocr_rects2(page)
+                    # print(ocr_rects)
+                    # exit(0)
 
                     all_ocr_cells = []
                     for ocr_rect in ocr_rects:
@@ -178,7 +178,7 @@ class MyOcrModel(BaseOcrModel):
                             }
 
                             payload = {
-                                "model": "/app/models/olmOCR-7B",
+                                "model": "olmOCR-7B",
                                 "messages": [
                                     {
                                         "role": "user",
@@ -200,7 +200,7 @@ class MyOcrModel(BaseOcrModel):
                                 "temperature": 0.0
                             }
 
-                            response = requests.post("http://localhost:6008/v1/chat/completions", json=payload, headers=headers)
+                            response = requests.post("http://olmocr-7b:6008/v1/chat/completions", json=payload, headers=headers)
                             response.raise_for_status()
 
                             return response.json()
@@ -209,7 +209,7 @@ class MyOcrModel(BaseOcrModel):
                         response = send_reqeust_to_olmocr(high_res_image)
                         content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
                         content = re.split(r"---\s*", content)[-1].strip()
-                        print(content)
+                        # print(content)
                         cells = [TextCell(
                                 index=0,
                                 text=content,
