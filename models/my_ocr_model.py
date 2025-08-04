@@ -146,27 +146,59 @@ class MyOcrModel(BaseOcrModel):
                 yield page
             else:
                 with TimeRecorder(conv_res, "ocr"):
-                    ocr_rects = self.get_ocr_rects(page)
-                    print(len(ocr_rects))
-                    exit(0)
+                    # ocr_rects = self.get_ocr_rects(page)
+                    # print(len(ocr_rects))
+                    # exit(0)
                     # print(ocr_rects)
-                    # ocr_rects = self.get_ocr_rects2(page)
+                    ocr_rects = self.get_ocr_rects2(page)
                     # print(ocr_rects)
                     # exit(0)
 
                     def handle_one_ocr_rect(ocr_rect: BoundingBox) -> List[TextCell]:
                         if ocr_rect.area() == 0:
                             return None
-                        high_res_image = page._backend.get_page_image(
-                            scale=self.scale, cropbox=ocr_rect
-                        )
+
+                        if ocr_rect.b - ocr_rect.t < 31 or ocr_rect.r - ocr_rect.l < 31:
+                            high_res_image = page._backend.get_page_image(
+                                scale=6, cropbox=ocr_rect
+                            )
+                        else:
+                            high_res_image = page._backend.get_page_image(
+                                scale=self.scale, cropbox=ocr_rect
+                            )
+                        print(high_res_image)
+
+                        # try:
+                        #     # 尝试创建一个详细的文件名
+                        #     filename = f"rect_({int(ocr_rect.t)},{int(ocr_rect.b)})_({int(ocr_rect.b)},{int(ocr_rect.r)}).png"
+                        # except AttributeError:
+                        #     filename = f"gg.png"
+
+                        # # 2. 构建完整的文件保存路径
+                        # import os
+                        # save_path = os.path.join("/tmp", filename)
+
+                        # # 3. 保存图像文件
+                        # high_res_image.save(save_path, "PNG")
+
+
 
                         # send requset
                         def build_no_anchoring_yaml_prompt() -> str:
+                            # This prompt is designed to be highly specific to ensure the model returns a predictable JSON object.
                             return (
-                                "Attached is one page of a document that you must process. "
-                                "Just return the plain text representation of this document as if you were reading it naturally. Convert equations to LateX and tables to markdown.\n"
-                                "Return your output as markdown, with a front matter section on top specifying values for the primary_language, is_rotation_valid, rotation_correction, is_table, and is_diagram parameters."
+                                "Your task is to analyze the attached image snippet from a document. "
+                                "You MUST respond with a single, valid JSON object and nothing else. Do not add any explanations or surrounding text.\n\n"
+                                "The JSON object must conform to the following structure and rules:\n"
+                                "{\n"
+                                '  "primary_language": "string",  // ISO 639-1 code of the dominant language (e.g., "en", "zh").\n'
+                                '  "is_rotation_valid": boolean, // true if the text in THIS SNIPPET is upright and readable.\n'
+                                '  "rotation_correction": integer, // Clockwise degrees (0, 90, 180, 270) needed to correct THIS SNIPPET. Set to 0 if is_rotation_valid is true.\n'
+                                '  "is_table": boolean,         // true if THIS SNIPPET appears to be part of a table.\n'
+                                '  "is_diagram": boolean,       // true if THIS SNIPPET appears to be part of a diagram or figure.\n'
+                                '  "text": "string"              // The transcribed text from the snippet. Convert equations to LaTeX.\n'
+                                "}\n\n"
+                                "Analyze the attached image and provide the JSON output now."
                             )
                         def send_reqeust_to_olmocr(image: Image.Image):
                             # encode to base64
@@ -209,11 +241,14 @@ class MyOcrModel(BaseOcrModel):
 
 
                         response = send_reqeust_to_olmocr(high_res_image)
+                        print(response)
                         content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
                         parsed = json.loads(content)
                         content_text = parsed.get("text", "")
-                        # print(content_text)
+                        print(content_text)
                         # exit(0)
+                        if content_text == None or content_text == "":
+                            return None
                         cells = TextCell(
                                 index=0,
                                 text=content_text,
