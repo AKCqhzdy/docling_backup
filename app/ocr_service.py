@@ -14,6 +14,7 @@ from docling.datamodel.base_models import InputFormat
 from docling.datamodel.pipeline_options import (
     PdfPipelineOptions,
     EasyOcrOptions,
+    MyOcrOptions,
 )
 from typing import Optional
 from docling.document_converter import DocumentConverter, PdfFormatOption
@@ -130,7 +131,8 @@ def initialize_converter():
     os.makedirs(INPUT_DIR, exist_ok=True)
     
     pipeline_options = PdfPipelineOptions()
-    ocr_options = EasyOcrOptions(force_full_page_ocr=True)
+    # ocr_options = EasyOcrOptions(force_full_page_ocr=True)
+    ocr_options = MyOcrOptions(force_full_page_ocr=True)
     pipeline_options.ocr_options = ocr_options
     
     return DocumentConverter(
@@ -164,7 +166,8 @@ async def create_ocr_task(
             status_code=200,
             content={
                 "message": "OCR task completed successfully.",
-                "markdown_content": result
+                "markdown_content": result[:50]
+                "output_s3_path": output_s3_path
             }
         )
     except Exception as e:
