@@ -28,6 +28,8 @@ from io import BytesIO
 from PIL import Image
 import re
 from paddleocr import LayoutDetection
+import json
+import concurrent.futures
 
 _log = logging.getLogger(__name__)
 
@@ -145,16 +147,16 @@ class MyOcrModel(BaseOcrModel):
             else:
                 with TimeRecorder(conv_res, "ocr"):
                     ocr_rects = self.get_ocr_rects(page)
+                    print(len(ocr_rects))
+                    exit(0)
                     # print(ocr_rects)
                     # ocr_rects = self.get_ocr_rects2(page)
                     # print(ocr_rects)
                     # exit(0)
 
-                    all_ocr_cells = []
-                    for ocr_rect in ocr_rects:
-                        # Skip zero area boxes
+                    def handle_one_ocr_rect(ocr_rect: BoundingBox) -> List[TextCell]:
                         if ocr_rect.area() == 0:
-                            continue
+                            return None
                         high_res_image = page._backend.get_page_image(
                             scale=self.scale, cropbox=ocr_rect
                         )
@@ -208,19 +210,32 @@ class MyOcrModel(BaseOcrModel):
 
                         response = send_reqeust_to_olmocr(high_res_image)
                         content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
-                        content = re.split(r"---\s*", content)[-1].strip()
-                        # print(content)
-                        cells = [TextCell(
+                        parsed = json.loads(content)
+                        content_text = parsed.get("text", "")
+                        # print(content_text)
+                        # exit(0)
+                        cells = TextCell(
                                 index=0,
-                                text=content,
-                                orig=content,
+                                text=content_text,
+                                orig=content_text,
                                 from_ocr=True,
                                 confidence=1,
                                 rect=BoundingRectangle.from_bounding_box(ocr_rect)
-                            )]
-                        all_ocr_cells.extend(cells)
+                            )
+                        return cells
+                    
+                    # all_ocr_cells = []
+                    # for ocr_rect in ocr_rects:
+                    #     # Skip zero area boxes
+                    #     cells = handle_one_ocr_rect(ocr_rect)
+                    #     if cells is not None:
+                    #         all_ocr_cells.extend(cells)
 
-                    # Post-process the cells
+                    MAX_WORKERS = 4 
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                        results_iterator = executor.map(handle_one_ocr_rect, ocr_rects)
+                    all_ocr_cells = [result for result in results_iterator if result is not None]
+                    
                     self.post_process_cells(all_ocr_cells, page)
 
                 # DEBUG code:

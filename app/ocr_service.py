@@ -20,6 +20,7 @@ from typing import Optional
 from docling.document_converter import DocumentConverter, PdfFormatOption
 import logging
 import boto3
+import codecs
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 s3_client = boto3.client('s3')
@@ -62,6 +63,7 @@ def perform_ocr(input_s3_path: str, output_s3_path: str):
 
 
     output_bucket, output_key = parse_s3_path(output_s3_path)
+    output_key = output_key + "/" + output_s3_path.rstrip("/").split("/")[-1]
     output_file_path = OUTPUT_DIR / output_bucket / output_key
     output_md_path = output_file_path.with_suffix(".md")
     output_json_path = output_file_path.with_suffix(".json")
@@ -71,7 +73,6 @@ def perform_ocr(input_s3_path: str, output_s3_path: str):
     try:
         doc = docling_converter.convert(str(input_file_path)).document
         md_content = doc.export_to_markdown()
-        
         with open(output_md_path, "w", encoding="utf-8") as f:
             f.write(md_content)
         with open(output_json_path, "w", encoding="utf-8") as f:
@@ -166,7 +167,7 @@ async def create_ocr_task(
             status_code=200,
             content={
                 "message": "OCR task completed successfully.",
-                "markdown_content": result[:50]
+                "markdown_content": result[:50],
                 "output_s3_path": output_s3_path
             }
         )
