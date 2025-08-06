@@ -187,18 +187,9 @@ class MyOcrModel(BaseOcrModel):
                         def build_no_anchoring_yaml_prompt() -> str:
                             # This prompt is designed to be highly specific to ensure the model returns a predictable JSON object.
                             return (
-                                "Your task is to analyze the attached image snippet from a document. "
-                                "You MUST respond with a single, valid JSON object and nothing else. Do not add any explanations or surrounding text.\n\n"
-                                "The JSON object must conform to the following structure and rules:\n"
-                                "{\n"
-                                '  "primary_language": "string",  // ISO 639-1 code of the dominant language (e.g., "en", "zh").\n'
-                                '  "is_rotation_valid": boolean, // true if the text in THIS SNIPPET is upright and readable.\n'
-                                '  "rotation_correction": integer, // Clockwise degrees (0, 90, 180, 270) needed to correct THIS SNIPPET. Set to 0 if is_rotation_valid is true.\n'
-                                '  "is_table": boolean,         // true if THIS SNIPPET appears to be part of a table.\n'
-                                '  "is_diagram": boolean,       // true if THIS SNIPPET appears to be part of a diagram or figure.\n'
-                                '  "text": "string"              // The transcribed text from the snippet. Convert equations to LaTeX.\n'
-                                "}\n\n"
-                                "Analyze the attached image and provide the JSON output now."
+                                 "Attached is one part of a page which belong to a document that you must process. "
+                                "Just return the plain text representation of this document as if you were reading it naturally.(USE label text) Convert equations to LateX and tables to markdown. (USE $ RATHER THAN \( OR \[ )\n"
+                                "Return your output as markdown, with a front matter section on top specifying values for the primary_language, is_rotation_valid, rotation_correction, is_table, and is_diagram parameters."
                             )
                         def send_reqeust_to_olmocr(image: Image.Image):
                             # encode to base64
@@ -241,11 +232,21 @@ class MyOcrModel(BaseOcrModel):
 
 
                         response = send_reqeust_to_olmocr(high_res_image)
-                        print(response)
+                        # print(response)
                         content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
-                        parsed = json.loads(content)
-                        content_text = parsed.get("text", "")
-                        print(content_text)
+                        try:
+                            parsed = json.loads(content)
+                            content_text = parsed.get("text", "")
+                            if content_text == "":
+                                content_text = parsed.get("content", "")
+                            if content_text == "":
+                                content_text = parsed.get("natural_content", "")
+                        except json.JSONDecodeError:
+                            content_text = content
+                        # if "text" not in parsed:
+                        #     print(response)
+                            
+                        # print(content_text)
                         # exit(0)
                         if content_text == None or content_text == "":
                             return None
@@ -266,7 +267,7 @@ class MyOcrModel(BaseOcrModel):
                     #     if cells is not None:
                     #         all_ocr_cells.extend(cells)
 
-                    MAX_WORKERS = 4 
+                    MAX_WORKERS = 16
                     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                         results_iterator = executor.map(handle_one_ocr_rect, ocr_rects)
                     all_ocr_cells = [result for result in results_iterator if result is not None]
