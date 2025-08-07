@@ -48,8 +48,8 @@ def process_single_pdf(converter: DocumentConverter, input_doc_path: Path, outpu
 def main():
     # --- Configuration ---
     # Set your main input and output directories
-    input_base_dir = Path("/olmOCR-bench/bench_data/pdfs")
-    output_base_dir = Path("/olmOCR-bench/bench_data/myocr")
+    input_base_dir = Path("/app/datasets/olmOCR-bench/bench_data/pdfs")
+    output_base_dir = Path("/app/datasets/olmOCR-bench/bench_data/myocr")
 
     # Choose your OCR engine (0 for MyOcr, 1 for EasyOcr, etc.)
     op = 0

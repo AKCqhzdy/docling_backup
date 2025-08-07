@@ -166,7 +166,7 @@ class MyOcrModel(BaseOcrModel):
                             high_res_image = page._backend.get_page_image(
                                 scale=self.scale, cropbox=ocr_rect
                             )
-                        print(high_res_image)
+                        # print(high_res_image)
 
                         # try:
                         #     # 尝试创建一个详细的文件名
