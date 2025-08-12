@@ -175,9 +175,9 @@ async def create_ocr_task(
         logging.error(f"Task processing failed {input_s3_path}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/")
+@app.get("/health")
 def read_root():
-    return {"status": "Docling OCR Service is running."}
+    return {"success": "true", "status": "200", "message": "Docling Service is running."}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=6008)
