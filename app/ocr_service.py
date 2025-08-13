@@ -8,7 +8,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Form, HTTPException
+from fastapi import FastAPI, Form, HTTPException, Response
 from starlette.responses import JSONResponse
 from docling.datamodel.base_models import InputFormat
 from docling.datamodel.pipeline_options import (
@@ -22,6 +22,7 @@ import logging
 import boto3
 import codecs
 from botocore.config import Config
+import httpx
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 s3_client = boto3.client('s3')
@@ -238,9 +239,52 @@ async def create_ocr_task(
         logging.error(f"Task processing failed {input_s3_path}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+TARGET_URL = "http://olmocr-7b:6008/health"
+async def health_check():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(TARGET_URL, timeout=5.0)
+
+        headers_to_exclude = {
+            "content-encoding",
+            "content-length",
+            "transfer-encoding",
+            "connection",
+        }
+        proxied_headers = {
+            key: value
+            for key, value in response.headers.items()
+            if key.lower() not in headers_to_exclude
+        }
+
+        return Response(
+            content=response.content,
+            status_code=response.status_code,
+            headers=proxied_headers,
+            media_type=response.headers.get("content-type")
+        )
+    except httpx.ConnectError as e:
+        return JSONResponse(
+            status_code=503,
+            content={"success": False, "status": 503, "detail": f"Health check failed: Unable to connect to DotsOCR service. Error: {e}"}
+        )
+    except httpx.TimeoutException as e:
+        return JSONResponse(
+            status_code=504,
+            content={"success": False, "status": 504,"detail": f"Health check failed: Request to DotsOCR service timed out. Error: {e}"}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "status": 500,"detail": f"An unexpected error occurred during health check. Error: {e}"}
+        )
+    
+
 @app.get("/health")
-def read_root():
-    return {"success": "true", "status": "200", "message": "Docling Service is running."}
+async def health():
+    return await health_check()
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=6008)
