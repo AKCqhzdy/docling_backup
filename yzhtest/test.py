@@ -36,7 +36,7 @@ def main():
     )
 
     prefix = "/usr/local/lib/python3.10/dist-packages/docling/yzhtest"
-    input_doc_path = f"{prefix}/datas/test.pdf"
+    input_doc_path = f"{prefix}/test.pdf"
     doc = converter.convert(input_doc_path).document
     md = doc.export_to_markdown()
     suffix = "_table"

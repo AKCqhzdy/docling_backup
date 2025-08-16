@@ -166,7 +166,7 @@ class MyOcrModel(BaseOcrModel):
                             high_res_image = page._backend.get_page_image(
                                 scale=self.scale, cropbox=ocr_rect
                             )
-                        # print(high_res_image)
+                        print(high_res_image)
 
                         # try:
                         #     # 尝试创建一个详细的文件名
@@ -226,13 +226,34 @@ class MyOcrModel(BaseOcrModel):
                             }
 
                             response = requests.post("http://olmocr-7b:6008/v1/chat/completions", json=payload, headers=headers)
-                            response.raise_for_status()
 
-                            return response.json()
+                            import uuid
+                            import datetime
+                            import os
+                            SAVE_FAILED_IMAGE_DIR = "/tmp/failed_images"
+                            print(response.status_code)
+                            def _save_failed_image(image: Image.Image, prefix="failed"):
+                                ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                                fname = f"{prefix}_{ts}_{uuid.uuid4().hex[:8]}.png"
+                                fpath = os.path.join(SAVE_FAILED_IMAGE_DIR, fname)
+                                try:
+                                    image.save(fpath, "PNG")
+                                    _log.info(f"Saved failed image to {fpath}")
+                                except Exception as e:
+                                    _log.error(f"Failed to save failed image: {e}")
+                            if response.status_code != 200:
+                                _save_failed_image(image, prefix="http_error")
+                                _log.error(f"Failed to get response from olmocr: {response.status_code} {response.text}")
+                                return  {"choices": [{"message": {"content": ""}}]}  # 失败直接返回 None
+
+                            try:
+                                return response.json()
+                            except Exception as e:
+                                _log.error(f"olmocr response is not valid JSON: {e}, content={response.text}")
+                                return  {"choices": [{"message": {"content": ""}}]}
 
 
                         response = send_reqeust_to_olmocr(high_res_image)
-                        # print(response)
                         content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
                         try:
                             parsed = json.loads(content)
@@ -267,7 +288,7 @@ class MyOcrModel(BaseOcrModel):
                     #     if cells is not None:
                     #         all_ocr_cells.extend(cells)
 
-                    MAX_WORKERS = 16
+                    MAX_WORKERS = 1
                     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                         results_iterator = executor.map(handle_one_ocr_rect, ocr_rects)
                     all_ocr_cells = [result for result in results_iterator if result is not None]
