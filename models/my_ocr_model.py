@@ -30,8 +30,14 @@ import re
 from paddleocr import LayoutDetection
 import json
 import concurrent.futures
+import uuid
+import datetime
+import os
 
 _log = logging.getLogger(__name__)
+SAVE_FAILED_IMAGE_DIR = "/tmp/failed_images"
+
+os.makedirs(SAVE_FAILED_IMAGE_DIR, exist_ok=True)
 
 
 class MyOcrModel(BaseOcrModel):
@@ -227,11 +233,6 @@ class MyOcrModel(BaseOcrModel):
 
                             response = requests.post("http://olmocr-7b:6008/v1/chat/completions", json=payload, headers=headers)
 
-                            import uuid
-                            import datetime
-                            import os
-                            SAVE_FAILED_IMAGE_DIR = "/tmp/failed_images"
-                            print(response.status_code)
                             def _save_failed_image(image: Image.Image, prefix="failed"):
                                 ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
                                 fname = f"{prefix}_{ts}_{uuid.uuid4().hex[:8]}.png"
